@@ -26,15 +26,19 @@
             alert(message);
         }
     </script>
-    <div id="abcd">
+    <div id="allCameras">
 
     </div>
+    <div id="currentCamera">
+
+    </div>
+    
     <script>
         /** LICENSE ALERT - README 
          * To use the library, you need to first specify a license key using the API "license" as shown below.
          */
 
-        Dynamsoft.DBR.BarcodeReader.license = 'DLS2eyJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSJ9';
+        Dynamsoft.DBR.BarcodeReader.license = 'f0068MgAAAODonqYPnDmAs/YCigVUpAd3n4VSQkK8ls1daguFhNphgWSiOZCo2Rx04voTfODmuRQbMIItc8aRy8J9BHqet4M=';
 
         /** 
          * You can visit https://www.dynamsoft.com/customer/license/trialLicense?utm_source=github&product=dbr&package=js to get your own trial license good for 30 days. 
@@ -54,10 +58,14 @@
                     let cameraJsonString = JSON.stringify(camera, null, 2);
                     camerasString += `Camera ${index + 1}:\n${cameraJsonString}\n\n`;
                 });
+                currentCamera = JSON.stringify(currentCamera, null, 2);
                 if (cameras.length) {
                     console.log(cameras);
                     console.log(currentCamera )
-                   document.getElementById("abcd").innerText = camerasString ;
+                   document.getElementById("allCameras").innerText = "All Cameras \n " + camerasString ;
+               //    document.getElementById("currentCamera").innerText = "current Camera" + currentCamera ;
+
+                   
                     await scanner.setCurrentCamera(cameras[0]);
                 }
                 scanner._dce._bWebGLSupported=false;
@@ -88,6 +96,14 @@
                  * After that, the library starts to scan the frame images continuously.
                  */
                 await scanner.show();
+                setTimeout(async () => {
+                    //till camera is auto assigned
+    let currentCamera2 = await scanner.getCurrentCamera();
+    currentCamera2 = JSON.stringify(currentCamera2, null, 2);
+    document.getElementById("currentCamera").innerText = "current Camera" + currentCamera2;
+}, 2000); // 2000 milliseconds = 2 seconds
+
+
             } catch (ex) {
                 let errMsg;
                 if (ex.message.includes("network connection error")) {
